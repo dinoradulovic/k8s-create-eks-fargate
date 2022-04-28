@@ -1,0 +1,25 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: test-cluster
+  region: us-west-1
+  version: "1.21"
+iam:
+  withOIDC: true
+fargateProfiles:
+  - name: fp-default-1
+    selectors:
+      # All workloads in the "default" Kubernetes namespace will be
+      # scheduled onto Fargate:
+      - namespace: default
+      # All workloads in the "kube-system" Kubernetes namespace will be
+      # scheduled onto Fargate:
+      - namespace: kube-system
+      - namespace: kubernetes-dashboard
+      - namespace: flux-system
+  - name: test-cluster
+    selectors:
+      - namespace: production
+      - namespace: staging
+
+
