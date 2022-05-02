@@ -54,21 +54,8 @@ http://localhost:8080/api/v1/namespaces/kubernetes-dashboard/services/https:kube
 > being able to delete the VPC.
 > https://docs.aws.amazon.com/eks/latest/userguide/delete-cluster.html
 
-Delete All: 
+Delete all Ingresses: 
 ```sh
 kubectl delete ingress production-ingress-prod -n production &&
-kubectl delete ingress staging-ingres-staging -n staging &&
-
-kubectl delete deployment microservice-one-deployment-name-staging -n staging &&
-kubectl delete deployment microservice-two-deployment-name-staging -n staging &&
-kubectl delete deployment microservice-one-deployment-name-prod -n production &&
-kubectl delete deployment microservice-two-deployment-name-prod -n production &&
-
-kubectl delete service microservice-one-service-name-prod -n production &&
-kubectl delete service microservice-two-service-name-prod -n production &&
-kubectl delete service microservice-one-service-name-staging -n staging &&
-kubectl delete service microservice-two-service-name-staging -n staging &&
-
-kubectl delete secret microservice-one-secret-name-prod -n production && 
-kubectl delete secret microservice-one-secret-name-staging -n staging
+kubectl delete ingress staging-ingres-staging -n staging
 ```
