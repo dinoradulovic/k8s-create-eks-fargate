@@ -1,9 +1,13 @@
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
+availabilityZones:
+  - ${CLUSTER_REGION}a
+  - ${CLUSTER_REGION}b
+  - ${CLUSTER_REGION}c
 metadata:
-  name: test-cluster
-  region: us-west-1
-  version: "1.21"
+  name: $CLUSTER_NAME
+  region: $CLUSTER_REGION
+  version: "$K8S_VERSION"
 iam:
   withOIDC: true
 fargateProfiles:
@@ -17,9 +21,7 @@ fargateProfiles:
       - namespace: kube-system
       - namespace: kubernetes-dashboard
       - namespace: flux-system
-  - name: test-cluster
+  - name: $CLUSTER_NAME
     selectors:
       - namespace: production
       - namespace: staging
-
-

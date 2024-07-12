@@ -28,6 +28,9 @@ export AWS_PAGER="" # https://stackoverflow.com/questions/60122188/how-to-turn-o
 
 function create_eks {
   echo "*** Using eksctl to create EKS cluster:" $CLUSTER_NAME "***"
+
+  cat eksctl-cluster-template.yaml | envsubst '${CLUSTER_NAME} ${CLUSTER_REGION} ${K8S_VERSION}' > eksctl-cluster.yaml
+
   eksctl create cluster -f $SCRIPT_DIR/eksctl-cluster.yaml
 }
 
@@ -35,7 +38,7 @@ function create_aws_load_balancer_controller {
   echo "*** Creating AWS Load Balancer Controller ***"
 
   echo "Downloading IAM Policy..."
-  curl -o $SCRIPT_DIR/iam_policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.4.1/docs/install/iam_policy.json
+  curl -o $SCRIPT_DIR/iam_policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v$LBC_VERSION/docs/install/iam_policy.json
 
   echo "Creating IAM Policy..."
   aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://$SCRIPT_DIR/iam_policy.json
@@ -74,7 +77,7 @@ function create_aws_load_balancer_controller {
     --set clusterName=$CLUSTER_NAME \
     --set serviceAccount.create=false \
     --set serviceAccount.name=aws-load-balancer-controller \
-    --set image.tag=${LBC_VERSION} \
+    --set image.tag=v${LBC_VERSION} \
     --set region=${CLUSTER_REGION} \
     --set vpcId=${VPC_ID}
 
@@ -86,7 +89,7 @@ function deploy_k8s_dashboard {
   echo "*** Deploy Kubernetes Dashboard ***"
 
   echo "Deploying Dashboard..."
-  kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/${DASHBOARD_VERSION}/aio/deploy/recommended.yaml
+  kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v${DASHBOARD_VERSION}/aio/deploy/recommended.yaml
 }
 
 create_eks
